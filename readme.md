@@ -1,4 +1,5 @@
 # Boundary loss
+
 Official repository for [Boundary loss for highly unbalanced segmentation](http://proceedings.mlr.press/v102/kervadec19a.html), _runner-up for best paper award_ at [MIDL 2019](https://2019.midl.io). Recording of the talk is available [on the MIDL YouTube channel](https://www.youtube.com/watch?v=_z6gmFlD_qE).
 
 A journal extension has been published in [Medical Image Analysis (MedIA), volume 67](https://doi.org/10.1016/j.media.2020.101851).
