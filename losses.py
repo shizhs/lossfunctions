@@ -1,4 +1,6 @@
 #!/usr/env/bin python3.9
+# Code originally from https://github.com/LIVIAETS/boundary-loss
+# Modified by Shizuka Hayashi 2022
 
 from typing import List, cast
 
@@ -92,9 +94,27 @@ class SurfaceLoss():
 
         return loss
 
+# Added by Shizuka Hayashi
+class BoundaryLoss():
+    def __init__(self, **kwargs):
+        # Self.idc is used to filter out some classes of the target mask. Use fancy indexing
+        self.idc: List[int] = kwargs["idc"]
+        print(f"Initialized {self.__class__.__name__} with {kwargs}")
 
-BoundaryLoss = SurfaceLoss
+    def __call__(self, probs: Tensor, dist_maps: Tensor) -> Tensor:
+        assert simplex(probs)
+        assert not one_hot(dist_maps)
 
+        pc = probs[:, self.idc, ...].type(torch.float32)
+        dc = dist_maps[:, self.idc, ...].type(torch.float32)
+
+        multipled = einsum("bkwh,bkwh->bkwh", pc, dc)
+
+        normalized = (multipled-multipled.min())/(multipled.max() - multipled.min())
+
+        loss = normalized.mean()
+
+        return loss
 
 class HausdorffLoss():
     """
